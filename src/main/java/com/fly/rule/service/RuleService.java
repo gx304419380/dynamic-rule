@@ -1,6 +1,7 @@
 package com.fly.rule.service;
 
 import com.fly.rule.dao.RuleDao;
+import com.fly.rule.dto.Page;
 import com.fly.rule.dto.RuleBriefDto;
 import com.fly.rule.entity.Rule;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +12,6 @@ import org.kie.internal.utils.KieHelper;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jdbc.repository.config.DialectResolver;
-import org.springframework.data.relational.core.dialect.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,33 +67,14 @@ public class RuleService {
                 "description varchar(200) null\n" +
                 ")";
 
-        String pgSql = "create table if not exists tb_rule (" +
-                "id serial primary key, " +
-                "name character varying(32), " +
-                "rule_text text, " +
-                "create_time timestamp, " +
-                "update_time timestamp, " +
-                "description character varying(200)" +
-                ")";
-
-        Dialect dialect = DialectResolver.getDialect(jdbcTemplate);
-
-        //mysql
-        if (dialect instanceof MySqlDialect) {
+        try {
+            log.info("建表语句：\n{}", sql);
             jdbcTemplate.execute(sql);
+            log.info("建表完成");
+        } catch (Exception e) {
+            log.error("不支持当前数据库，请手动建表：", e);
         }
-        //H2数据库
-        else if (dialect instanceof H2Dialect) {
-            jdbcTemplate.execute(sql);
-        }
-        //Oracle
-        else if (dialect instanceof OracleDialect) {
-            log.warn("---- does not support oracle database, please create table manually!");
-        }
-        //postgres
-        else if (dialect instanceof PostgresDialect) {
-            jdbcTemplate.execute(pgSql);
-        }
+
     }
 
 
@@ -137,13 +114,7 @@ public class RuleService {
      * @return          page
      */
     public Page<RuleBriefDto> page(Integer pageNo, Integer pageSize, String name) {
-
-        Sort sort = Sort.by(Sort.Direction.DESC, CREATE_TIME);
-
-        PageRequest pageRequest = PageRequest.of(pageNo - 1, pageSize, sort);
-        name = hasText(name) ? "%" + name + "%" : "%";
-
-        return ruleDao.findByNameLike(name, pageRequest);
+        return ruleDao.findByNameLike(name, pageNo, pageSize);
     }
 
 

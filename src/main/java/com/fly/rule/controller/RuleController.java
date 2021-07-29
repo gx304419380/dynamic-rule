@@ -1,5 +1,6 @@
 package com.fly.rule.controller;
 
+import com.fly.rule.dto.Page;
 import com.fly.rule.dto.RuleBriefDto;
 import com.fly.rule.dto.RuleDetailDto;
 import com.fly.rule.entity.Rule;
@@ -12,7 +13,6 @@ import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
 import org.kie.api.io.ResourceType;
 import org.kie.internal.utils.KieHelper;
-import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 

@@ -3,7 +3,6 @@ package com.fly.rule.config;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
@@ -15,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @ConditionalOnProperty(value = "dynamic.rule.enable", matchIfMissing = true)
 @EnableAsync(proxyTargetClass = true)
 @ComponentScan("com.fly.rule")
-@EnableJdbcRepositories(basePackages = "com.fly.rule.dao")
 public class DynamicRuleConfig {
 }
 
