@@ -8,10 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.utils.KieHelper;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jdbc.repository.config.DialectResolver;
+import org.springframework.data.relational.core.dialect.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,20 +58,46 @@ public class RuleService {
     /**
      * 初始化数据库
      */
-    @PostConstruct
+    @EventListener(classes = ApplicationReadyEvent.class)
     public void init() throws IOException {
         String sql = "create table if not exists tb_rule\n" +
                 "(\n" +
-                "\tid bigint auto_increment\n" +
-                "\t\tprimary key,\n" +
-                "    name varchar(32) null,\n" +
-                "    rule_text text not null,\n" +
-                "\tcreate_time datetime null,\n" +
-                "\tupdate_time datetime null,\n" +
-                "\tdescription varchar(200) null\n" +
+                "id bigint auto_increment\n" +
+                "primary key,\n" +
+                "name varchar(32) null,\n" +
+                "rule_text text not null,\n" +
+                "create_time datetime null,\n" +
+                "update_time datetime null,\n" +
+                "description varchar(200) null\n" +
                 ")";
 
-        jdbcTemplate.execute(sql);
+        String pgSql = "create table if not exists tb_rule (" +
+                "id serial primary key, " +
+                "name character varying(32), " +
+                "rule_text text, " +
+                "create_time timestamp, " +
+                "update_time timestamp, " +
+                "description character varying(200)" +
+                ")";
+
+        Dialect dialect = DialectResolver.getDialect(jdbcTemplate);
+
+        //mysql
+        if (dialect instanceof MySqlDialect) {
+            jdbcTemplate.execute(sql);
+        }
+        //H2数据库
+        else if (dialect instanceof H2Dialect) {
+            jdbcTemplate.execute(sql);
+        }
+        //Oracle
+        else if (dialect instanceof OracleDialect) {
+            log.warn("---- does not support oracle database, please create table manually!");
+        }
+        //postgres
+        else if (dialect instanceof PostgresDialect) {
+            jdbcTemplate.execute(pgSql);
+        }
     }
 
 
