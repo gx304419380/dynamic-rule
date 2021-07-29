@@ -1,4 +1,4 @@
-package com.fly.drools.config;
+package com.fly.rule.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @Configuration
 @ConditionalOnProperty(value = "dynamic.rule.enable", matchIfMissing = true)
 @EnableAsync(proxyTargetClass = true)
-@ComponentScan("com.fly.drools")
+@ComponentScan("com.fly.rule")
 @EnableJdbcRepositories(basePackages = "com.fly.drools.dao")
 public class DynamicRuleConfig {
 }

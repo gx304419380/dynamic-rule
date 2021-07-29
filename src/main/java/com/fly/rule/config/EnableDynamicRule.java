@@ -1,4 +1,4 @@
-package com.fly.drools.config;
+package com.fly.rule.config;
 
 import org.springframework.context.annotation.Import;
 
