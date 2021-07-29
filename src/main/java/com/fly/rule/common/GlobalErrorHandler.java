@@ -19,7 +19,7 @@ public class GlobalErrorHandler {
 
     @ExceptionHandler(Exception.class)
     public RuleResult handleException(Exception e) {
-        log.error("- global exception", e);
+        log.error("- rule exception", e);
         return RuleResult.fail(e.getMessage());
     }
 
