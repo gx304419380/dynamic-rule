@@ -8,11 +8,29 @@
         <version>2.5.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.fly</groupId>
+    <groupId>com.github.gx304419380</groupId>
     <artifactId>dynamic-rule</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>dynamic-drools</name>
-    <description>Demo project for Spring Boot</description>
+    <version>1.0.0</version>
+    <name>dynamic-rule</name>
+    <description>
+        this is powerful project used for generate api on the fly!
+        you can add/update/delete your business logic when the program is running.
+    </description>
+
+    <scm>
+        <connection>scm:git:https://github.com/gx304419380/spring-hook.git</connection>
+        <url>https://github.com/gx304419380/spring-hook</url>
+        <developerConnection>scm:git:https://github.com/gx304419380/spring-hook.git</developerConnection>
+    </scm>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>license</comments>
+        </license>
+    </licenses>
+
     <properties>
         <java.version>1.8</java.version>
         <drools.version>7.57.0.Final</drools.version>
