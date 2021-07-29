@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github.gx304419380</groupId>
     <artifactId>dynamic-rule</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>dynamic-rule</name>
     <description>
         this is powerful project used for generate api on the fly!
