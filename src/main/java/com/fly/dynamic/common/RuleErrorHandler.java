@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice(basePackages = "com.fly.dynamic.controller")
 @Slf4j
-public class GlobalErrorHandler {
+public class RuleErrorHandler {
 
     @ExceptionHandler(Exception.class)
     public RuleResult handleException(Exception e) {
