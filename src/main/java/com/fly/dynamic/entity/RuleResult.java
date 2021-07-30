@@ -16,9 +16,6 @@ public class RuleResult {
 
     private Object data;
 
-    public RuleResult() {
-    }
-
     public static RuleResult success() {
         return new RuleResult().setCode(0);
     }
