@@ -22,4 +22,8 @@ public class Rule {
 
     private LocalDateTime updateTime;
 
+    public Rule setName(String name) {
+        this.name = name == null ? null : name.trim();
+        return this;
+    }
 }

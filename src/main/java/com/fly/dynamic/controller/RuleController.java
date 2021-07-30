@@ -5,7 +5,6 @@ import com.fly.dynamic.dto.RuleBriefDto;
 import com.fly.dynamic.dto.RuleDetailDto;
 import com.fly.dynamic.entity.Rule;
 import com.fly.dynamic.entity.RuleResult;
-import com.fly.dynamic.service.DynamicService;
 import com.fly.dynamic.service.RuleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +16,9 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.fly.dynamic.common.RuleErrorMessage.RULE_SYNTAX_ERROR;
-import static com.fly.dynamic.common.RuleErrorMessage.RULE_TEXT_NULL_ERROR;
+import static com.fly.dynamic.common.RuleErrorMessage.*;
 
 /**
  * 规则controller
@@ -35,44 +32,6 @@ import static com.fly.dynamic.common.RuleErrorMessage.RULE_TEXT_NULL_ERROR;
 public class RuleController {
 
     private final RuleService ruleService;
-    private final DynamicService dynamicService;
-
-    /**
-     * 动态接口 POST
-     *
-     * @param ruleId    ruleId
-     * @param param param
-     * @return      result
-     */
-    @PostMapping("/dynamic/{ruleId}")
-    public RuleResult handlePost(@PathVariable Long ruleId, @RequestBody Map<String, Object> param) {
-
-        log.debug("- handle post dynamic rule: {}, param: {}", ruleId, param);
-
-        RuleResult result = dynamicService.handle(ruleId, param);
-
-        log.debug("- dynamic post controller result: {}", result);
-        return result;
-    }
-
-    /**
-     * 动态接口 GET
-     *
-     * @param ruleId    ruleId
-     * @param param param
-     * @return      result
-     */
-    @GetMapping("/dynamic/{ruleId}")
-    public RuleResult handleGet(@PathVariable Long ruleId, @RequestParam Map<String, Object> param) {
-
-        log.debug("- handle get dynamic rule: {}, param: {}", ruleId, param);
-
-        RuleResult result = dynamicService.handle(ruleId, param);
-
-        log.debug("- dynamic get controller result: {}", result);
-        return result;
-    }
-
 
     /**
      * 新增或修改规则
@@ -83,30 +42,14 @@ public class RuleController {
     public RuleResult saveRule(@RequestBody Rule rule) {
         log.info("save rule: {}", rule);
 
+        String name = rule.getName();
+        Assert.hasText(name, NAME_ERROR);
+        Assert.isTrue(name.matches("^[0-9a-zA-Z_]{4,10}$"), NAME_ERROR);
+
         checkRuleText(rule.getRuleText());
         ruleService.save(rule);
 
         log.info("save rule success id: {}", rule.getId());
-        return RuleResult.success(rule.getId());
-    }
-
-
-    /**
-     * 新增或修改规则  纯文本
-     *
-     * @param ruleText  规则
-     * @return          result
-     */
-    @PostMapping("text")
-    public RuleResult saveRulePlainText(@RequestBody String ruleText) {
-        log.info("save ruleText: {}", ruleText);
-        checkRuleText(ruleText);
-
-        Rule rule = new Rule();
-        rule.setRuleText(ruleText);
-        ruleService.save(rule);
-
-        log.info("save ruleText success id: {}", rule.getId());
         return RuleResult.success(rule.getId());
     }
 

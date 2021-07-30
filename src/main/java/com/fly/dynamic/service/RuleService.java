@@ -24,10 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.fly.dynamic.common.RuleErrorMessage.RULE_NULL_ERROR;
-import static com.fly.dynamic.common.RuleErrorMessage.RULE_TEXT_NULL_ERROR;
+import static com.fly.dynamic.common.RuleErrorMessage.*;
 import static org.kie.api.io.ResourceType.DRL;
-import static org.springframework.util.StringUtils.hasText;
 
 /**
  * 规则引擎动态获取session工具类
@@ -41,8 +39,8 @@ import static org.springframework.util.StringUtils.hasText;
 @RequiredArgsConstructor
 public class RuleService {
 
-    private static final Map<String, KieContainer> CACHE_RULE = new HashMap<>();
     private static final Map<Long, KieContainer> CACHE_ID = new HashMap<>();
+    private static final Map<String, Long> CACHE_NAME = new HashMap<>();
 
     private final ApplicationContext context;
     private final RuleDao ruleDao;
@@ -86,6 +84,9 @@ public class RuleService {
         Long id = rule.getId();
         LocalDateTime now = LocalDateTime.now();
 
+        Boolean exist = ruleDao.exist(rule.getName(), id);
+        Assert.isTrue(!exist, NAME_EXIST_ERROR);
+
         //如果是新增
         if (ObjectUtils.isEmpty(id)) {
             rule.setCreateTime(now);
@@ -100,7 +101,7 @@ public class RuleService {
         ruleDao.save(rule);
 
         //刷新缓存
-        uninstallById(rule.getId());
+        uninstall(rule);
     }
 
 
@@ -147,31 +148,11 @@ public class RuleService {
         ruleDao.deleteById(id);
 
         //清缓存
-        uninstallById(id);
+        uninstall(rule.get());
         return rule.get();
     }
 
-
-    /**
-     * 根据规则获取对应的session
-     *
-     * @param rule rule
-     * @return      session
-     */
-    public KieSession getSessionByRule(String rule) {
-        KieContainer container = getContainerByRule(rule);
-
-        KieSession session = container.newKieSession();
-
-        //设置日志和spring容器
-        session.insert(log);
-        session.insert(context);
-        session.insert(jdbcTemplate);
-
-        return session;
-    }
-
-
+    
     /**
      * 根据id获取对应的session
      *
@@ -192,20 +173,56 @@ public class RuleService {
     }
 
 
+    /**
+     * 根据名称获取规则容器session
+     *
+     * @param name 名称
+     * @return      session
+     */
+    public KieSession getSessionByName(String name) {
+        Long id = CACHE_NAME.get(name);
+
+        if (id != null) {
+            return getSessionById(id);
+        }
+
+        synchronized (CACHE_NAME) {
+            CACHE_NAME.computeIfAbsent(name, this::getIdByName);
+            id = CACHE_NAME.get(name);
+            return getSessionById(id);
+        }
+    }
+
+    /**
+     * 根据名称获取规则id
+     *
+     * @param name  name
+     * @return      id
+     */
+    private Long getIdByName(String name) {
+        Rule rule = ruleDao.findByName(name);
+        Assert.notNull(rule, CANNOT_FIND_RULE_ERROR);
+        return rule.getId();
+    }
+
 
     /**
      * 卸载某规则
      *
-     * @param id id
+     * @param rule rule
      */
-    private void uninstallById(Long id) {
+    private void uninstall(Rule rule) {
+        Long id = rule.getId();
+
+        //卸载container
         KieContainer container = CACHE_ID.get(id);
-        if (container == null) {
-            return;
+        if (container != null) {
+            CACHE_ID.remove(id);
+            container.dispose();
         }
 
-        container.dispose();
-        CACHE_ID.remove(id);
+        //清理name
+        CACHE_NAME.remove(rule.getName());
     }
 
 
@@ -240,25 +257,6 @@ public class RuleService {
 
         Assert.isTrue(rule.isPresent(), RULE_NULL_ERROR);
         return rule.get().getRuleText();
-    }
-
-
-    /**
-     * 从缓存获取container
-     *
-     * @param rule  rule
-     * @return      container
-     */
-    private KieContainer getContainerByRule(String rule) {
-        KieContainer container = CACHE_RULE.get(rule);
-
-        if (container != null) {
-            return container;
-        }
-
-        synchronized (CACHE_RULE) {
-            return CACHE_RULE.computeIfAbsent(rule, key -> new KieHelper().addContent(key, DRL).getKieContainer());
-        }
     }
 
 

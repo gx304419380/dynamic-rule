@@ -116,4 +116,38 @@ public class RuleDao {
     public void deleteById(Long id) {
         jdbc.update("delete from tb_rule where id=?", id);
     }
+
+    /**
+     * 判断名称是否存在
+     *
+     * @param name  name
+     * @param id    id
+     * @return      count
+     */
+    public Boolean exist(String name, Long id) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("name", name);
+        param.put("id", id);
+
+        String sql = "select count(*) from tb_rule where name=:name ";
+        if (id != null) {
+            sql += "and id != :id ";
+        }
+
+        sql += "limit 1";
+
+        Integer count = namedJdbc.queryForObject(sql, param, Integer.class);
+        return !Objects.equals(count, 0);
+    }
+
+    /**
+     * 根据名称查找rule
+     *
+     * @param name  name
+     * @return      rule
+     */
+    public Rule findByName(String name) {
+        List<Rule> list = jdbc.query("select * from tb_rule where name=?", RULE_MAPPER, name);
+        return list.stream().findAny().orElse(null);
+    }
 }

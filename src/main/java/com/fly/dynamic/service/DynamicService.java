@@ -24,10 +24,37 @@ public class DynamicService {
 
     private final ObjectMapper objectMapper;
 
-    public RuleResult handle(Long id, Map<String, Object> param) {
+    public RuleResult handleById(Long id, Map<String, Object> param) {
         //从缓存中获取session
         KieSession session = ruleService.getSessionById(id);
 
+        return handle(session, param);
+    }
+
+
+    /**
+     * 根据名称处理
+     *
+     * @param name  name
+     * @param param param
+     * @return      结果
+     */
+    public RuleResult handleByName(String name, Map<String, Object> param) {
+        //从缓存中获取session
+        KieSession session = ruleService.getSessionByName(name);
+
+        return handle(session, param);
+    }
+
+
+    /**
+     * 处理规则
+     *
+     * @param session   session
+     * @param param param
+     * @return      result
+     */
+    private RuleResult handle(KieSession session, Map<String, Object> param) {
         //接收参数，并转为动态参数
         generateDynamicParam(session, param);
 
@@ -44,8 +71,6 @@ public class DynamicService {
 
         return result;
     }
-
-
 
     /**
      * 这里使用jackson进行赋值，支持更多数据类型
@@ -72,5 +97,6 @@ public class DynamicService {
         }
 
     }
+
 
 }
