@@ -1,6 +1,6 @@
-package com.fly.rule.dto;
+package com.fly.dynamic.dto;
 
-import com.fly.rule.entity.Rule;
+import com.fly.dynamic.entity.Rule;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.beans.BeanUtils;

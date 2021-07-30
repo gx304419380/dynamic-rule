@@ -1,7 +1,7 @@
-package com.fly.rule.service;
+package com.fly.dynamic.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fly.rule.entity.RuleResult;
+import com.fly.dynamic.entity.RuleResult;
 import lombok.RequiredArgsConstructor;
 import org.kie.api.definition.KiePackage;
 import org.kie.api.definition.type.FactType;

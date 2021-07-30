@@ -1,8 +1,8 @@
-package com.fly.rule.dao;
+package com.fly.dynamic.dao;
 
-import com.fly.rule.dto.Page;
-import com.fly.rule.dto.RuleBriefDto;
-import com.fly.rule.entity.Rule;
+import com.fly.dynamic.dto.Page;
+import com.fly.dynamic.dto.RuleBriefDto;
+import com.fly.dynamic.entity.Rule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +15,7 @@ import org.springframework.util.Assert;
 
 import java.util.*;
 
-import static com.fly.rule.common.RuleErrorMessage.ID_NULL_ERROR;
+import static com.fly.dynamic.common.RuleErrorMessage.ID_NULL_ERROR;
 import static org.springframework.util.StringUtils.hasText;
 
 /**

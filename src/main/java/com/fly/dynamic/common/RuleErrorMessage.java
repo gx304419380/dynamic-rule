@@ -1,4 +1,4 @@
-package com.fly.rule.common;
+package com.fly.dynamic.common;
 
 import lombok.experimental.UtilityClass;
 

@@ -1,9 +1,9 @@
-package com.fly.rule.service;
+package com.fly.dynamic.service;
 
-import com.fly.rule.dao.RuleDao;
-import com.fly.rule.dto.Page;
-import com.fly.rule.dto.RuleBriefDto;
-import com.fly.rule.entity.Rule;
+import com.fly.dynamic.dao.RuleDao;
+import com.fly.dynamic.dto.Page;
+import com.fly.dynamic.dto.RuleBriefDto;
+import com.fly.dynamic.entity.Rule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kie.api.runtime.KieContainer;
@@ -18,16 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.fly.rule.common.RuleConstant.CREATE_TIME;
-import static com.fly.rule.common.RuleErrorMessage.RULE_NULL_ERROR;
-import static com.fly.rule.common.RuleErrorMessage.RULE_TEXT_NULL_ERROR;
+import static com.fly.dynamic.common.RuleErrorMessage.RULE_NULL_ERROR;
+import static com.fly.dynamic.common.RuleErrorMessage.RULE_TEXT_NULL_ERROR;
 import static org.kie.api.io.ResourceType.DRL;
 import static org.springframework.util.StringUtils.hasText;
 

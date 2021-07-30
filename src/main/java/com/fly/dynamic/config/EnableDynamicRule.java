@@ -1,4 +1,4 @@
-package com.fly.rule.config;
+package com.fly.dynamic.config;
 
 import org.springframework.context.annotation.Import;
 

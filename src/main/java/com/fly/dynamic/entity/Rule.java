@@ -1,4 +1,4 @@
-package com.fly.rule.entity;
+package com.fly.dynamic.entity;
 
 import lombok.Data;
 

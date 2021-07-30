@@ -1,12 +1,12 @@
-package com.fly.rule.controller;
+package com.fly.dynamic.controller;
 
-import com.fly.rule.dto.Page;
-import com.fly.rule.dto.RuleBriefDto;
-import com.fly.rule.dto.RuleDetailDto;
-import com.fly.rule.entity.Rule;
-import com.fly.rule.entity.RuleResult;
-import com.fly.rule.service.DynamicService;
-import com.fly.rule.service.RuleService;
+import com.fly.dynamic.dto.Page;
+import com.fly.dynamic.dto.RuleBriefDto;
+import com.fly.dynamic.dto.RuleDetailDto;
+import com.fly.dynamic.entity.Rule;
+import com.fly.dynamic.entity.RuleResult;
+import com.fly.dynamic.service.DynamicService;
+import com.fly.dynamic.service.RuleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kie.api.builder.Message;
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.fly.rule.common.RuleErrorMessage.RULE_SYNTAX_ERROR;
-import static com.fly.rule.common.RuleErrorMessage.RULE_TEXT_NULL_ERROR;
+import static com.fly.dynamic.common.RuleErrorMessage.RULE_SYNTAX_ERROR;
+import static com.fly.dynamic.common.RuleErrorMessage.RULE_TEXT_NULL_ERROR;
 
 /**
  * 规则controller

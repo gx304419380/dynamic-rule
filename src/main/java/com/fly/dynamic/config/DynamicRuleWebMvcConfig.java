@@ -1,4 +1,4 @@
-package com.fly.rule.config;
+package com.fly.dynamic.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
